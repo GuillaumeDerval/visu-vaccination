@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Playing with vaccines</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" rel="stylesheet">
+    <script crossorigin="anonymous" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha512-asxKqQghC1oBShyhiBwA+YgotaSYKxGP1rcSYTDrB0U6DxwlJjU59B67U8+5/++uFjcuVM8Hh5cokLjZlhm3Vg=="
+            referrerpolicy="no-referrer"
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ=="
+            referrerpolicy="no-referrer"
+            src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js"></script>
+
+    <style type="text/css">
+        .form-range {
+            height: 100%;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-12" style="padding: 1px; min-width: 0">
+            <canvas id="canvas" style="width: 100%; max-height: 500px; height: 100%; display: block;"></canvas>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <h3>% vaccination</h3>
+            <div class="row g-3">
+                <label for="v-0-5" class="col-sm-2 col-form-label">0-5 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="v-0-5" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="v-0-5-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="v-6-19" class="col-sm-2 col-form-label">6-19 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="v-6-19" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="v-6-19-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="v-20-39" class="col-sm-2 col-form-label">20-39 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="v-20-39" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="v-20-39-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="v-40-59" class="col-sm-2 col-form-label">40-59 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="v-40-59" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="v-40-59-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="v-60-79" class="col-sm-2 col-form-label">60-79 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="v-60-79" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="v-60-79-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="v-80+" class="col-sm-2 col-form-label">80+ ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="v-80+" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="v-80+-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+
+            <h3>#hospitalisations, hors vaccination</h3>
+            <div class="row g-3">
+                <label for="h-0-5" class="col-sm-2 col-form-label">0-5 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="h-0-5" max="300" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="h-0-5-v" class="form-control" max="300" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="h-6-19" class="col-sm-2 col-form-label">6-19 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="h-6-19" max="300" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="h-6-19-v" class="form-control" max="300" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="h-20-39" class="col-sm-2 col-form-label">20-39 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="h-20-39" max="300" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="h-20-39-v" class="form-control" max="300" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="h-40-59" class="col-sm-2 col-form-label">40-59 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="h-40-59" max="300" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="h-40-59-v" class="form-control" max="300" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="h-60-79" class="col-sm-2 col-form-label">60-79 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="h-60-79" max="300" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="h-60-79-v" class="form-control" max="300" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="h-80+" class="col-sm-2 col-form-label">80+ ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="h-80+" max="300" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="h-80+-v" class="form-control" max="300" min="0" type="number"></div>
+            </div>
+
+            <h3>% efficacité du vaccin</h3>
+
+            <div class="row g-3">
+                <label for="p-0-5" class="col-sm-2 col-form-label">0-5 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="p-0-5" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="p-0-5-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="p-6-19" class="col-sm-2 col-form-label">6-19 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="p-6-19" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="p-6-19-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="p-20-39" class="col-sm-2 col-form-label">20-39 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="p-20-39" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="p-20-39-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="p-40-59" class="col-sm-2 col-form-label">40-59 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="p-40-59" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="p-40-59-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="p-60-79" class="col-sm-2 col-form-label">60-79 ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="p-60-79" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="p-60-79-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+            <div class="row g-3">
+                <label for="p-80+" class="col-sm-2 col-form-label">80+ ans</label>
+                <div class="col-sm-6 align-middle"><input class="form-range" id="p-80+" max="100" min="0" type="range" value="1"></div>
+                <div class="col-sm-3"><input id="p-80+-v" class="form-control" max="100" min="0" type="number"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ageGroups = ["0-5", "6-19", "20-39", "40-59", "60-79", "80+"]
+    var ratioHospi = [1., 1., 8., 20., 38., 32.]
+    var ratioVacc = [1., 2., 30., 70., 90., 87.]
+    var vaccEfficiency = [95., 95., 95., 95., 95., 95.]
+
+    function recomputeData() {
+        var dataSet = [];
+        var total = 0.0;
+        for (var i = 0; i < 6; i++) {
+            var entry = {
+                label: ageGroups[i],
+                data: [
+                    ratioHospi[i],
+                    ratioHospi[i] * (1.0 - (ratioVacc[i] / 100.0) * (vaccEfficiency[i] / 100.0)),
+                    0
+                ],
+                backgroundColor: chroma.brewer.Set2[i],
+            };
+            total += entry["data"][1];
+            dataSet.push(entry);
+        }
+        for (var i = 0; i < 6; i++)
+            dataSet[i]["data"][2] = 100.0 * dataSet[i]["data"][1] / total;
+        for (var i = 0; i < 6; i++) {
+            var entry = {
+                label: ageGroups[i] + " (évitées)",
+                data: [
+                    0,
+                    ratioHospi[i] * (ratioVacc[i] / 100.0) * (vaccEfficiency[i] / 100.0),
+                    0
+                ],
+                backgroundColor: chroma(chroma.brewer.Greys[i]).brighten().hex(),
+            };
+            dataSet.push(entry);
+        }
+
+        return dataSet;
+    }
+
+    const labels = [["100 hospitalisations", "sans vaccination"], "Avec vaccination", ["Ratio","(vaccination, %)"]];
+
+    const config = {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: recomputeData()
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        filter: function (label) {
+                            return !label.text.endsWith(' (évitées)');
+                        }
+                    }
+                },
+                tooltip: {
+                    filter: function (a) {
+                        return !a["dataset"]["label"].endsWith(' (évitées)') || (a["label"] === "Avec vaccination");
+                    }
+                }
+            },
+            responsive: true,
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    max: 100
+                }
+            },
+
+        }
+    };
+
+    var chart = new Chart(document.getElementById('canvas'), config);
+
+    function up() {
+        chart.data.datasets = recomputeData();
+        chart.update('none');
+    }
+
+    function createSlider(base, array) {
+        for(let i = 0; i < 6; i++) {
+            let range = document.getElementById(base+"-"+ageGroups[i]);
+            let value = document.getElementById(base+"-"+ageGroups[i]+"-v");
+            range.value = array[i];
+            value.value = array[i];
+            range.addEventListener("change", function (event) { array[i] = value.value = range.value; up();});
+            value.addEventListener("change", function (event) { array[i] = range.value = value.value; up();});
+        }
+    }
+    createSlider("h", ratioHospi);
+    createSlider("v", ratioVacc);
+    createSlider("p", vaccEfficiency);
+</script>
+</body>
+
+</html>
+
+
+
+
+
