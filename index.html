@@ -18,6 +18,8 @@
             integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ=="
             referrerpolicy="no-referrer"
             src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 
     <style type="text/css">
         .form-range {
@@ -98,7 +100,7 @@
                 <div class="col-sm-3"><input id="h-80+-v" class="form-control" max="300" min="0" type="number"></div>
             </div>
 
-            <h3>% efficacité du vaccin</h3>
+            <h3>% hospis évitées si vacciné</h3>
 
             <div class="row g-3">
                 <label for="p-0-5" class="col-sm-2 col-form-label">0-5 ans</label>
@@ -136,15 +138,22 @@
 
 <script>
     const ageGroups = ["0-5", "6-19", "20-39", "40-59", "60-79", "80+"]
-    var ratioHospi = [1., 1., 8., 20., 38., 32.]
+    var nbHospi = [1., 1., 8., 20., 38., 32.]
     var ratioVacc = [1., 2., 30., 70., 90., 87.]
     var vaccEfficiency = [95., 95., 95., 95., 95., 95.]
 
     function recomputeData() {
+        let totalH = 0;
+        for(let i = 0; i < 6; i++)
+            totalH += nbHospi[i];
+        let ratioHospi = [];
+        for(let i = 0; i < 6; i++)
+            ratioHospi.push(100.0*nbHospi[i]/totalH);
+
         var dataSet = [];
         var total = 0.0;
-        for (var i = 0; i < 6; i++) {
-            var entry = {
+        for (let i = 0; i < 6; i++) {
+            let entry = {
                 label: ageGroups[i],
                 data: [
                     ratioHospi[i],
@@ -156,10 +165,10 @@
             total += entry["data"][1];
             dataSet.push(entry);
         }
-        for (var i = 0; i < 6; i++)
+        for (let i = 0; i < 6; i++)
             dataSet[i]["data"][2] = 100.0 * dataSet[i]["data"][1] / total;
-        for (var i = 0; i < 6; i++) {
-            var entry = {
+        for (let i = 0; i < 6; i++) {
+            let entry = {
                 label: ageGroups[i] + " (évitées)",
                 data: [
                     0,
@@ -196,6 +205,10 @@
                     filter: function (a) {
                         return !a["dataset"]["label"].endsWith(' (évitées)') || (a["label"] === "Avec vaccination");
                     }
+                },
+                datalabels: {
+                    display: "auto",
+                    clamp: true
                 }
             },
             responsive: true,
@@ -212,6 +225,7 @@
         }
     };
 
+    //Chart.register(ChartDataLabels);
     var chart = new Chart(document.getElementById('canvas'), config);
 
     function up() {
@@ -225,11 +239,11 @@
             let value = document.getElementById(base+"-"+ageGroups[i]+"-v");
             range.value = array[i];
             value.value = array[i];
-            range.addEventListener("change", function (event) { array[i] = value.value = range.value; up();});
-            value.addEventListener("change", function (event) { array[i] = range.value = value.value; up();});
+            range.addEventListener("change", function (event) { value.value = range.value; array[i] = parseInt(value.value); up();});
+            value.addEventListener("change", function (event) { range.value = value.value; array[i] = parseInt(value.value); up();});
         }
     }
-    createSlider("h", ratioHospi);
+    createSlider("h", nbHospi);
     createSlider("v", ratioVacc);
     createSlider("p", vaccEfficiency);
 </script>
